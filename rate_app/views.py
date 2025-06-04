@@ -2,16 +2,38 @@ from django.shortcuts import render, redirect
 from .models import rate_data
 import pandas as pd
 from datetime import datetime
+import json
 
 
 # Create your views here.
 def rate_index(request):
+    currency = None
+    x_data = None
+    y_data = None
     currencies = rate_data.objects.values_list("currency", flat=True).distinct()
     lastest_date = (
         rate_data.objects.values_list("date", flat=True).order_by("-date").first()
     )
 
-    result = {"currencies": currencies, "lastest_date": lastest_date}
+    if request.method == "POST":
+        currency = request.POST.get("currency")
+        datas = rate_data.objects.filter(currency=currency)
+
+        x_data = list(
+            datetime.strftime(date[0], "%Y-%m-%d") for date in datas.values_list("date")
+        )
+
+        y_data = list(price[0] for price in datas.values_list("price"))
+
+    result = {
+        "currencies": currencies,
+        "lastest_date": lastest_date,
+        "currency": currency,
+        "x_data": json.dumps(x_data),
+        "y_data": json.dumps(y_data),
+    }
+
+    print(result)
 
     return render(request, "rate_app/rate_data.html", result)
 
@@ -40,8 +62,8 @@ def update_rate_data(request):
                     )
                 )
 
-        # 寫入資料庫
-        rate_data.objects.bulk_create(insert_datas)
+        # 寫入資料庫(忽略錯誤)
+        rate_data.objects.bulk_create(insert_datas, ignore_conflicts=True)
 
     except Exception as ex:
         print(ex)

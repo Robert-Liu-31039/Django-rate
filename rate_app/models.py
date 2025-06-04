@@ -22,3 +22,10 @@ class rate_data(models.Model):
     def __str__(self):  # self 代表是要取同個 model 內的物件
         # id 是 table 預設一定會有的欄位
         return f"{self.date} - {self.currency} - {self.price}"
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["date", "currency"], name="unique_date_currency"
+            )
+        ]

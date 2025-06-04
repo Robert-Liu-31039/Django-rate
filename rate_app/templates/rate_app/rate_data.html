@@ -3,11 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
     <title>匯率資料</title>
 </head>
 <body>
     <h1>匯率資料</h1>
     <h3>最新更新時間: {{lastest_date}}</h3>    
     <a class="btn-update" href="{% url 'rateDataUpdateUrlName' %}">更新資料庫</a>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <label for="currency">選取幣別</label>
+        <!-- 縣市選擇框 -->
+        <select name="currency" id="currency">
+            <option value="">-請選擇-</option>
+            {% for i in currencies %}            
+            <option value="{{i}}" {% if currency == i %} selected {% endif %}>{{i}}</option>            
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn-search">查詢</button>
+        
+    </form>
+    <!--為 ECharts 預留一個定義寬與高的 DOM -->
+        <div id="main" style="width: 600px;height:400px;" data-labels='{{ x_data }}' data-values='{{ y_data }}'></div>
+    <script type="text/javascript">
+        const chart = document.querySelector("#main");        
+        const labels = JSON.parse(chart.dataset.labels);
+        const values = JSON.parse(chart.dataset.values);
+
+        // 基於準備好的DOM，初始化 Echarts
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+          title: {
+            text: '匯率資料數據圖'
+          },
+          tooltip: {},
+          legend: {
+            data: ['price']
+          },
+          xAxis: {
+            data: labels
+          },
+          dataZoom:[{
+            type:'slider',
+            start:0,
+            end:100
+          }],
+          yAxis: {},
+          series: [
+            {
+                name: 'price',
+                type: 'line',
+                smooth: true,
+                itemStyle: {
+                    color: 'rgb(255, 70, 13)'
+                },
+                data: values
+            }
+          ]
+        };
+  
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+      </script>
 </body>
 </html>
