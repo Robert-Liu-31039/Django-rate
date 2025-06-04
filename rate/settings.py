@@ -32,7 +32,7 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = "django-insecure-sn1zdlti7+w^x1^v*xqj4!fr4xbuhddj%lm((l!l34qb_r!(4g"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -57,6 +57,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "rate.urls"
@@ -139,7 +140,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+# 對外的 url 呈現 -> 自己要手動將預設內容調整為 STATIC_URL = "/static/"
+STATIC_URL = "/static/"
+
+# 真正對內的路徑 -> 自己要手動寫，預設內容沒有
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# 自己要手動寫，預設內容沒有
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

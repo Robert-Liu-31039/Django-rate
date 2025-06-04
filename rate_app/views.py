@@ -10,7 +10,12 @@ def rate_index(request):
     currency = None
     x_data = None
     y_data = None
-    currencies = rate_data.objects.values_list("currency", flat=True).distinct()
+    currencies = (
+        rate_data.objects.values_list("currency", flat=True)
+        .order_by("currency")
+        .distinct()
+    )
+
     lastest_date = (
         rate_data.objects.values_list("date", flat=True).order_by("-date").first()
     )

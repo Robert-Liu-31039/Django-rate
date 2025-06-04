@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
     <title>匯率資料</title>
+    <link rel="stylesheet" href="{% static 'rate_app/style.css' %}">
+    <style>
+      #main{
+        text-align: center;
+        margin: 0 auto;
+      }
+
+      
+    </style>
 </head>
 <body>
     <h1>匯率資料</h1>
@@ -20,11 +30,12 @@
             <option value="{{i}}" {% if currency == i %} selected {% endif %}>{{i}}</option>            
             {% endfor %}
         </select>
-        <button type="submit" class="btn-search">查詢</button>
+        <button type="submit" class="btn-search" onclick="checkCurrency()">查詢</button>
         
     </form>
     <!--為 ECharts 預留一個定義寬與高的 DOM -->
-        <div id="main" style="width: 600px;height:400px;" data-labels='{{ x_data }}' data-values='{{ y_data }}'></div>
+    <div id="main" style="width: 600px;height:400px;" data-labels='{{ x_data }}' data-values='{{ y_data }}'></div>
+
     <script type="text/javascript">
         const chart = document.querySelector("#main");        
         const labels = JSON.parse(chart.dataset.labels);
@@ -66,6 +77,15 @@
   
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
+
+        function checkCurrency(){
+            let currency = document.getElementById('currency').value;
+            
+            if(currency == ""){
+                alert("請選取幣別!");
+                return false;
+            }
+        }
       </script>
 </body>
 </html>
