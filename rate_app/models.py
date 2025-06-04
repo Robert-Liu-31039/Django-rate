@@ -8,7 +8,7 @@ class rate_data(models.Model):
     date = models.DateTimeField(null=False, blank=False)
 
     # 在字串型別中，blank=True 代表可以為空字串
-    currency = models.TextField(blank=False)
+    currency = models.CharField(blank=False, max_length=50)
 
     # 在字串型別中，blank=True 代表可以為空字串
     price = models.FloatField(blank=False)
