@@ -1,0 +1,13 @@
+name: Update Rate DB
+
+on:
+  schedule:
+    - cron: '00 16 * * *'  # 每天 24:00 台灣時間 (UTC+8)
+  workflow_dispatch:       # 可手動執行
+
+jobs:
+  curl-update-db:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call /update-db endpoint
+        run: curl -s https://django-rate.onrender.com/update-db
