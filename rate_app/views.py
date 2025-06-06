@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import rate_data
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
 
@@ -10,6 +10,8 @@ def rate_index(request):
     currency = None
     x_data = None
     y_data = None
+    max_price = 0
+    min_price = 0
     currencies = (
         rate_data.objects.values_list("currency", flat=True)
         .order_by("currency")
@@ -24,11 +26,18 @@ def rate_index(request):
         currency = request.POST.get("currency")
         datas = rate_data.objects.filter(currency=currency)
 
+        # 因為上雲端後，雲端的 Server 讀取的是 utc 的時間，
+        # 而台灣是 utc+8 的時間，
+        # 所以要使用 datetime.now()+timedelta(hours=8) 來取得台灣時間
         x_data = list(
-            datetime.strftime(date[0], "%Y-%m-%d") for date in datas.values_list("date")
+            datetime.strftime((date[0] + timedelta(hours=8)), "%Y-%m-%d")
+            for date in datas.values_list("date")
         )
 
         y_data = list(price[0] for price in datas.values_list("price"))
+
+        max_price = max(y_data)
+        min_price = min(y_data)
 
     result = {
         "currencies": currencies,
@@ -36,6 +45,8 @@ def rate_index(request):
         "currency": currency,
         "x_data": json.dumps(x_data),
         "y_data": json.dumps(y_data),
+        "max_price": max_price,
+        "min_price": min_price,
     }
 
     print(result)
