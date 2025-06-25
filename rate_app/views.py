@@ -49,7 +49,7 @@ def rate_index(request):
         "min_price": min_price,
     }
 
-    print(result)
+    # print(result)
 
     return render(request, "rate_app/rate_data.html", result)
 
@@ -59,11 +59,13 @@ def update_rate_data(request):
 
     try:
         # 讀取最新的雲端資料
-        read_datas = pd.read_csv(api_url, encoding="big5")
+        read_datas = pd.read_csv(api_url, encoding="utf-8-sig")
 
         currency_key = set()
         for key in read_datas.keys()[1:]:
             currency_key.add(key)
+
+        # print(currency_key)
 
         insert_datas = []
         for index, data in read_datas.iterrows():
