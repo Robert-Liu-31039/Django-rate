@@ -48,7 +48,7 @@ def update_rate_data(request):
 
     try:
         # 讀取最新的雲端資料
-        read_datas = pd.read_csv(api_url, encoding="big5")
+        read_datas = pd.read_csv(api_url, encoding="utf-8-sig")
 
         currency_key = set()
         for key in read_datas.keys()[1:]:
