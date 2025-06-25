@@ -36,6 +36,9 @@
     <!--為 ECharts 預留一個定義寬與高的 DOM -->
     <div id="main" style="width: 600px;height:400px;" data-labels='{{ x_data }}' data-values='{{ y_data }}'></div>
 
+    <p>最高價格: {{max_price}}</p>
+    <p>最低價格: {{min_price}}</p>
+
     <script type="text/javascript">
         const chart = document.querySelector("#main");        
         const labels = JSON.parse(chart.dataset.labels);
