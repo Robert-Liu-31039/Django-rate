@@ -44,6 +44,23 @@
         const labels = JSON.parse(chart.dataset.labels);
         const values = JSON.parse(chart.dataset.values);
 
+        let min_price = parseInt('{{min_price}}');
+        let max_price = parseInt('{{max_price}}');
+
+        if(min_price > ((parseInt(min_price / 10) + 0.5) * 10)){
+          min_price = ((parseInt(min_price / 10) + 0.5) * 10);
+        }
+        else{
+          min_price = (parseInt(min_price / 10) * 10);
+        }
+
+        if(max_price < ((parseInt(max_price / 10) + 0.5) * 10)){
+          max_price = ((parseInt(max_price / 10) + 0.5) * 10);
+        }
+        else{
+          max_price = ((parseInt(max_price / 10) + 1) * 10);
+        }
+
         // 基於準備好的DOM，初始化 Echarts
         var myChart = echarts.init(document.getElementById('main'));
 
@@ -64,7 +81,11 @@
             start:0,
             end:100
           }],
-          yAxis: {},
+          yAxis: {            
+            type: 'value',
+            min:min_price,
+            max:max_price            
+          },
           series: [
             {
                 name: 'price',
