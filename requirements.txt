@@ -16,3 +16,4 @@ sqlparse==0.5.3
 tzdata==2025.2
 whitenoise==6.9.0
 zope.interface==7.2
+requests==2.32.4
