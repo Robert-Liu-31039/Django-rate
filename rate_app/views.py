@@ -3,7 +3,8 @@ from .models import rate_data
 import pandas as pd
 from datetime import datetime, timedelta
 import json
-
+import requests
+from io import StringIO
 
 # Create your views here.
 def rate_index(request):
@@ -59,7 +60,12 @@ def update_rate_data(request):
 
     try:
         # 讀取最新的雲端資料
-        read_datas = pd.read_csv(api_url, encoding="utf-8-sig")
+        # read_datas = pd.read_csv(api_url, encoding="utf-8-sig")
+
+        # 設置 verify=False 來跳過 SSL 驗證
+        response = requests.get(api_url, verify=False)
+        # 使用 StringIO 將內容轉換為文件格式供 pandas 讀取
+        read_datas = pd.read_csv(StringIO(response.text), encoding="utf-8-sig")
 
         currency_key = set()
         for key in read_datas.keys()[1:]:
