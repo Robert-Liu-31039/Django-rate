@@ -5,10 +5,7 @@ from datetime import datetime, timedelta
 import json
 import requests
 from io import StringIO
-<<<<<<< HEAD
 
-=======
->>>>>>> bd3e255575940510f5f6e60082c36940b59cabd6
 
 # Create your views here.
 def rate_index(request):
