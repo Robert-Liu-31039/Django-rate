@@ -15,7 +15,7 @@ def rate_index(request):
     max_price = 0
     min_price = 0
     currencies = (
-        rate_data.objects.values_list("currency", flat=True)
+        rate_data.objects.values_list("currency ", flat=True)
         .order_by("currency")
         .distinct()
     )
